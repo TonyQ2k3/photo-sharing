@@ -14,6 +14,10 @@ module.exports = {
       },
       fontFamily: {
         'merienda': ['Merienda', 'cursive'],
+      },
+      colors: {
+        'iconic-blue':  "#22c1c3",
+        'iconic-orange': "#fdbb2d",
       }
     },
   },
