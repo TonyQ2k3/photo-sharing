@@ -3,56 +3,46 @@
 import React, { useState } from 'react'
 import Link from 'next/link';
 
+
+
 const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API;
 
-function Register() {
+function Login() {
     const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
 
     const onSubmit = async(e) => {
         e.preventDefault();
-
-        // Reset error state
         setError('');
-
-        // Check password confirmation
-        if (password !== confirmPassword) {
-            setError('Confirm Password does not match');
-            return;
-        }
-        //console.log(email, username, password, confirmPassword);
         try {
-            await handleRegister(username, email, password);
+            await handleLogin(email, password);
             // Optionally redirect or show success message
         } catch (err) {
-            setError('Registration failed. Please try again.');
+            setError('Login failed. Please try again.');
         }
     }
 
-    const handleRegister = async(username, email, password) => {
+    const handleLogin = async(email, password) => {
         let user = {
-            username: username,
             email: email,
             password: password
         };
         console.log(user);
         try {
-            const response = await fetch(`${BACKEND_API}/users/register`, {
+            const response = await fetch(`${BACKEND_API}/auth/login`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(user),
             });
       
             if (!response.ok) {
-              throw new Error('Registration failed');
+              throw new Error('Login failed');
             }
       
             const data = await response.json();
-            console.log('User registered:', data);
-            // Handle successful registration
+            console.log('User logged in:', data);
+            // Handle successful login
         } catch (err) {
             setError(err.message);
         }
@@ -60,14 +50,14 @@ function Register() {
 
     return (
         <div className='min-h-screen w-full flex justify-center items-center bg-gradient-to-r from-iconic-blue to-iconic-orange'>
-            {/* Sign up */}
+            {/* Login */}
             <div className='bg-white flex flex-col justify-center items-center py-4 px-6 rounded-xl shadow-2xl'>
-                <h1 className='font-merienda font-bold text-2xl md:text-2xl mx-2 m-4'>PixShare</h1>
+                <h1 className='font-merienda font-bold text-2xl md:text-2xl mx-2 m-4'>
+                    PixShare
+                </h1>
                 <form onSubmit={onSubmit} className='form-wrapper'>
                     <input type='email' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} className="form-input"/>
-                    <input type='text' placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} className="form-input"/>
                     <input type='password' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} className="form-input" />
-                    <input type='password' placeholder='Confirm Password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="form-input" />
                     {
                         error !== '' ? (
                             <div className='w-full p-2 bg-red-300 border-red-400 border-2'>
@@ -78,12 +68,13 @@ function Register() {
                         )
                     }
                     <button type='submit' className='w-full bg-blue-500 hover:bg-blue-600 p-2 rounded-lg mt-4 text-white'>
-                        Sign Up
+                        Login
                     </button>
                 </form>
+                <Link href="#" className='text-blue-500 hover:text-blue-600 mt-4'>Forgot password?</Link>
                 <div className="w-full border-2 border-gray-300 p-2 mt-4 flex justify-center">
-                    <span>Already had an account? 
-                        <Link href="/auth/login" className='text-blue-500 hover:text-blue-600 ml-2'>Log In</Link>
+                    <span>Don't have an account? 
+                        <Link href="/register" className='text-blue-500 hover:text-blue-600 ml-2'>Sign Up</Link>
                     </span>
                 </div>
             </div>
@@ -91,4 +82,4 @@ function Register() {
     )
 }
 
-export default Register
+export default Login

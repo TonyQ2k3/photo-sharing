@@ -10,7 +10,7 @@ function Header() {
   return (
     <div className="w-full border-b-2 border-gray-300">
         <div className='flex justify-between items-center w-full lg:w-3/4 mx-auto py-2'>
-            <h1 className="font-merienda font-semibold text-lg md:text-2xl mx-2">PixShare</h1>
+            <Link href="/" className="font-merienda font-semibold text-lg md:text-2xl mx-2">PixShare</Link>
             <SearchBar />
             <nav className='flex'>
                 <Link href="#" className="nav-wrapper">
@@ -22,7 +22,7 @@ function Header() {
                 <Link href="#" className="nav-wrapper">
                     <IconWithTooltip src={heart} alt="Favorites" tooltip="Favorites" />
                 </Link>
-                <Link href="/auth/login">
+                <Link href="/login">
                     <UserIcon />
                 </Link>
             </nav>

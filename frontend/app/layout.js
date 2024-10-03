@@ -1,6 +1,5 @@
 import { Inter, Merienda } from "next/font/google";
 import "./globals.css";
-import Header from "./components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 const merienda = Merienda({ subsets: ["latin"] });
@@ -11,6 +10,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
   return (
     <html lang="en">
       <head>
@@ -19,7 +19,6 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet"/>
       </head>
       <body className={inter.className}>
-        <Header />
         {children}
       </body>
     </html>

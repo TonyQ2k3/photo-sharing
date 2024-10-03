@@ -2,58 +2,55 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link';
+import { app } from '@/lib/firebase';
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
-const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API;
 
-function Login() {
+function Register() {
+    const auth = getAuth(app);
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
 
     const onSubmit = async(e) => {
         e.preventDefault();
-        setError('');
-        try {
-            await handleLogin(email, password);
-            // Optionally redirect or show success message
-        } catch (err) {
-            setError('Login failed. Please try again.');
-        }
-    }
 
-    const handleLogin = async(email, password) => {
-        let user = {
-            email: email,
-            password: password
-        };
-        console.log(user);
-        try {
-            const response = await fetch(`${BACKEND_API}/auth/login`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(user),
-            });
-      
-            if (!response.ok) {
-              throw new Error('Login failed');
-            }
-      
-            const data = await response.json();
-            console.log('User logged in:', data);
-            // Handle successful login
-        } catch (err) {
-            setError(err.message);
+        // Reset error state
+        setError('');
+
+        // Check password confirmation
+        if (password !== confirmPassword) {
+            setError('Confirm Password does not match');
+            return;
         }
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed up 
+            const user = userCredential.user;
+            updateProfile(user, {
+                displayName: username
+            })
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+            setError('Registration failed. Please try again.');
+        });
     }
 
     return (
         <div className='min-h-screen w-full flex justify-center items-center bg-gradient-to-r from-iconic-blue to-iconic-orange'>
-            {/* Login */}
+            {/* Sign up */}
             <div className='bg-white flex flex-col justify-center items-center py-4 px-6 rounded-xl shadow-2xl'>
                 <h1 className='font-merienda font-bold text-2xl md:text-2xl mx-2 m-4'>PixShare</h1>
                 <form onSubmit={onSubmit} className='form-wrapper'>
                     <input type='email' placeholder='Email' value={email} onChange={(e) => setEmail(e.target.value)} className="form-input"/>
+                    <input type='text' placeholder='Username' value={username} onChange={(e) => setUsername(e.target.value)} className="form-input"/>
                     <input type='password' placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} className="form-input" />
+                    <input type='password' placeholder='Confirm Password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="form-input" />
                     {
                         error !== '' ? (
                             <div className='w-full p-2 bg-red-300 border-red-400 border-2'>
@@ -64,13 +61,12 @@ function Login() {
                         )
                     }
                     <button type='submit' className='w-full bg-blue-500 hover:bg-blue-600 p-2 rounded-lg mt-4 text-white'>
-                        Login
+                        Sign Up
                     </button>
                 </form>
-                <Link href="#" className='text-blue-500 hover:text-blue-600 mt-4'>Forgot password?</Link>
                 <div className="w-full border-2 border-gray-300 p-2 mt-4 flex justify-center">
-                    <span>Don't have an account? 
-                        <Link href="/auth/register" className='text-blue-500 hover:text-blue-600 ml-2'>Sign Up</Link>
+                    <span>Already had an account? 
+                        <Link href="/auth/login" className='text-blue-500 hover:text-blue-600 ml-2'>Log In</Link>
                     </span>
                 </div>
             </div>
@@ -78,4 +74,4 @@ function Login() {
     )
 }
 
-export default Login
+export default Register
