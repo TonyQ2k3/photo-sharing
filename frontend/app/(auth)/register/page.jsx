@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from 'react'
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { app } from '@/lib/firebase';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -13,6 +14,9 @@ function Register() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+
+    // Navigation
+    const router = useRouter();
 
     const onSubmit = async(e) => {
         e.preventDefault();
@@ -31,7 +35,8 @@ function Register() {
             const user = userCredential.user;
             updateProfile(user, {
                 displayName: username
-            })
+            });
+            router.push('/home');
         })
         .catch((error) => {
             const errorCode = error.code;
