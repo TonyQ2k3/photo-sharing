@@ -3,12 +3,11 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { app } from '@/lib/firebase';
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from '@/lib/firebase';
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 
 function Register() {
-    const auth = getAuth(app);
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');

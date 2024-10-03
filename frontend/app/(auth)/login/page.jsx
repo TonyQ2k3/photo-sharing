@@ -2,12 +2,12 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link';
-
-
-
-const BACKEND_API = process.env.NEXT_PUBLIC_BACKEND_API;
+import { useRouter } from 'next/navigation';
+import { auth } from '@/lib/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 function Login() {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -15,37 +15,15 @@ function Login() {
     const onSubmit = async(e) => {
         e.preventDefault();
         setError('');
-        try {
-            await handleLogin(email, password);
-            // Optionally redirect or show success message
-        } catch (err) {
-            setError('Login failed. Please try again.');
-        }
-    }
-
-    const handleLogin = async(email, password) => {
-        let user = {
-            email: email,
-            password: password
-        };
-        console.log(user);
-        try {
-            const response = await fetch(`${BACKEND_API}/auth/login`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(user),
-            });
-      
-            if (!response.ok) {
-              throw new Error('Login failed');
-            }
-      
-            const data = await response.json();
-            console.log('User logged in:', data);
-            // Handle successful login
-        } catch (err) {
-            setError(err.message);
-        }
+        
+        await signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+            router.push('/home');
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+        });
     }
 
     return (

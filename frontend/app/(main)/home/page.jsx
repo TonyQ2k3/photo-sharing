@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { auth } from '@/lib/firebase';
+
 
 function Home() {
+  const user = auth.currentUser;
   return (
     <div>
-        <h1>Home</h1>
+        
     </div>
   )
 }
