@@ -29,10 +29,10 @@ function Header() {
             <Link href="/" className="font-merienda font-semibold text-lg md:text-2xl mx-2">PixShare</Link>
             <SearchBar />
             <nav className='flex'>
-                <Link href="#" className="nav-wrapper">
+                <Link href="/home" className="nav-wrapper">
                     <IconWithTooltip src={home} alt="Home" tooltip="Home" />
                 </Link>
-                <Link href="#" className="nav-wrapper">
+                <Link href="/post/create" className="nav-wrapper">
                     <IconWithTooltip src={add} alt="New post" tooltip="New post" />
                 </Link>
                 <Link href="#" className="nav-wrapper">
@@ -75,7 +75,7 @@ function UserIcon({ user }) {
                     {isOpen && (
                     <div className='dropdown-bar'>
                         <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                            <Link href="/profile" className='dropdown-item'>Profile</Link>
+                            <Link href={`/profile/${user.uid}`} className='dropdown-item'>Profile</Link>
                             <Link href="/settings" className='dropdown-item'>Settings</Link>
                             <Link href="/logout" className='dropdown-item'>Log Out</Link>
                         </div>
