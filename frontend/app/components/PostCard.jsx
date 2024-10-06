@@ -1,14 +1,39 @@
+"use client"
+
+import { useState, useEffect } from "react";
+import { db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import Link from "next/link";
+
 const PostCard = ({ post }) => {
+  const [userData, setUserData] = useState(null);
+
+
+  useEffect(() => {
+    const getUserData = async () => {
+      const userRef = doc(db, 'users', post.userId);
+      const userDoc = await getDoc(userRef);
+    
+      if (userDoc.exists()) {
+        setUserData(userDoc.data());
+      } else {
+        console.log("No user found!");
+        setUserData(null);
+      }
+    };
+    getUserData();
+  }, []);
+
   return (
     <div className="border rounded-md shadow-md overflow-hidden mb-4">
       {/* User Information */}
       <div className="flex items-center p-4">
         <img
-          src="https://via.placeholder.com/40" // Placeholder for user profile picture
+          src={"https://via.placeholder.com/40"}
           alt="User Avatar"
           className="w-10 h-10 rounded-full mr-3"
         />
-        <p className="font-semibold">{post.userId}</p> {/* Assuming you have username in post data */}
+        <Link href={`/profile/${post.userId}`} className="font-semibold">{userData ? userData.displayName : "John Doe"}</Link> {/* Assuming you have username in post data */}
       </div>
       
       {/* Post Image */}
