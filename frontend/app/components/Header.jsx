@@ -7,7 +7,7 @@ import {add, heart, home, account} from '@/public'
 import IconWithTooltip from './IconWithTooltip'
 
 import { auth } from '@/lib/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 
 
 function Header() {
@@ -60,6 +60,15 @@ function UserIcon({ user }) {
         setIsOpen((prev) => !prev);
     };
 
+    const handleSignOut = async() => {
+        try {
+            await signOut(auth);
+            console.log('User signed out');
+        } catch (error) {
+            console.error('Sign out error: ', error);
+        }
+    }
+
     return (
     <div className="mx-[5px] md:mx-2 p-[5px] relative">
         {
@@ -77,7 +86,7 @@ function UserIcon({ user }) {
                         <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                             <Link href={`/profile/${user.uid}`} className='dropdown-item'>Profile</Link>
                             <Link href="/settings" className='dropdown-item'>Settings</Link>
-                            <Link href="/logout" className='dropdown-item'>Log Out</Link>
+                            <button onClick={handleSignOut} className='dropdown-item'>Log Out</button>
                         </div>
                     </div>)}
                 </div>
